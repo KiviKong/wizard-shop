@@ -1,7 +1,13 @@
-const data = require('./items.json');
-let money = 220;
-let discountPercentage = 0.1;
-const userData = [];
+const items = require('./items.json');
+
+var consoleLog = require('./utils/consoleLog.js');
+
+let userMoney = 500;
+let discountBuyPercentage = 0.1;
+const userItems = [];
+
+const internationalNumberFormat = new Intl.NumberFormat('es-MX');
+const actions = ['Buy something', 'Sell your stuff to me', 'Know your finances', 'Have a nice conversation'];
 
 const input = require('readline').createInterface({
   input: process.stdin,
@@ -16,225 +22,187 @@ function userInput(question) {
   });
 }
 
+const getInventary = (label) => {
+  if (userItems.length === 0) {
+    consoleLog('Your inventory is empty!', 'red', 'bright');
+    return false;
+  } else {
+    consoleLog('         Your inventory:', 'yellow', 'bright');
+    for (let i = 0; i < userItems.length; i++) {
+      consoleLog(`             ${i + 1}- ${userItems[i].name}: ${userItems[i].onStock} pzas.`, '', 'bright');
+    }
+    consoleLog(`\n\n             0- Go back`, '', 'bright');
+    return true;
+  }
+};
+
+const getMainMenu = () => {
+  consoleLog('\n');
+  for (let i = 0; i < actions.length; i++) {
+    consoleLog(`        ${i + 1}- ${actions[i]}`);
+  }
+  consoleLog(`\n\n        0- Exit`, 'white', 'bright');
+  return '';
+};
+
 async function init() {
-  console.log('Welcome to my store, How can I help you?');
-  let loop = true;
-  while (loop) {
-    console.log('----------Inventory----------');
-    console.log(data);
-    console.log('------');
-    console.log(userData);
-    console.log('-----------------------------');
-  const option = await userInput(`
-    options:
-    1. Buy something.
-    2. Sell your stuff to me.
-    3. Know your finances.
-    4. Have a nice conversation.
+  let stayInside = true;
 
-    0. Exit.
-  `);
+  while (stayInside) {
+    let selectedOption;
+    let itemToBuy;
+    let itemToSell;
 
-    switch (Number(option)) {
-          case 0:
-            loop = false;
-            break;
-      case 1:
-        console.log(`
-          Ok this is what I have:
-          1. Dragon tears
-          2. Red potion
-          3. Black oak stick
+    consoleLog(`____________________________________________________________________________________________________________________\n`, 'white', 'bright');
+    consoleLog('Welcome to my store, How can I help you?', 'yellow', 'bright');
 
-          0. Go back
-        `);
+    selectedOption = Number(await userInput(getMainMenu()));
 
-        const secondOption = await userInput('Do you wanna something? \n');
-          switch (Number(secondOption)) {
-            case 0:
-              break;
-            case 1:
-              const selected = data.find((a) => a.name === 'Dragon tears');
-              console.log(selected.description, '\n');
-              console.log('The unit price is ', selected.unitPrice);
-              console.log('\n');
-              const answer = await userInput('Want some? tell my how many do you want');
-                if (Number(answer) > selected.onStock) {
-                  console.log("Sorry, I don't have enough of this.");
-                } else if ((Number(answer) * selected.unitPrice) > money) {
-                  console.log("Are you stupid? you don't have enough money");
-                } else {
-                  console.log(`you buy ${answer} pieces. you are welcome.`);
-                  selected.onStock -= Number(answer);
-                  money -= (Number(answer) * selected.unitPrice);
-                  const some = userData.some((userSome) => userSome.name === 'Dragon tears');
-                  if (some) {
-                    for (let i = 0; i < userData.length; i++) {
-                      if (userData[i].name === 'Dragon tears') {
-                        userData[i].onStock += Number(answer);
-                      }
-                    }
-                  } else {
-                    userData.push({...selected, onStock: Number(answer) });
-                  }
-                }
-              break;
-            case 2:
-              const selected2 = data.find((a) => a.name === 'Red potion');
-              console.log(selected2.description, '\n');
-              console.log('The unit price is ', selected2.unitPrice);
-              console.log('\n');
-              const answer2 = await userInput('Want some? tell my how many do you want');
-                if (Number(answer2) > selected2.onStock) {
-                  console.log("Sorry, I don't have enough of this.");
-                } else if ((Number(answer2) * selected2.unitPrice) > money) {
-                  console.log("Are you stupid? you don't have enough money");
-                } else {
-                  console.log(`you buy ${answer2} pieces. you are welcome.`);
-                  selected2.onStock -= Number(answer2);
-                  money -= (Number(answer2) * selected2.unitPrice);
-                  const some2 = userData.some((userSome2) => userSome2.name === 'Red potion');
-                  if (some2) {
-                    for (let i = 0; i < userData.length; i++) {
-                      if (userData[i].name === 'Red potion') {
-                        userData[i].onStock += Number(answer2);
-                      }
-                    }
-                  } else {
-                    userData.push({...selected2, onStock: Number(answer2) });
-                  }
-                }
-              break;
-            case 3:
-              const selected3 = data.find((a) => a.name === 'Black oak stick');
-              console.log(selected3.description, '\n');
-              console.log('The unit price is ', selected3.unitPrice);
-              console.log('\n');
-              const answer3 = await userInput('Want some? tell my how many do you want');
-                if (Number(answer3) > selected3.onStock) {
-                  console.log("Sorry, I don't have enough of this.");
-                } else if ((Number(answer3) * selected3.unitPrice) > money) {
-                  console.log("Are you stupid? you don't have enough money");
-                } else {
-                  console.log(`you buy ${answer3} pieces. you are welcome.`);
-                  selected3.onStock -= Number(answer3);
-                  money -= (Number(answer3) * selected3.unitPrice);
-                  const some3 = userData.some((userSome3) => userSome3.name === 'Black oak stick');
-                  if (some3) {
-                    for (let i = 0; i < userData.length; i++) {
-                      if (userData[i].name === 'Black oak stick') {
-                        userData[i].onStock += Number(answer3);
-                      }
-                    }
-                  } else {
-                    userData.push({...selected3, onStock: Number(answer3) });
-                  }
-                }
-              break;
-            default:
-              break;
+    const selectItemToBuy = async (itemIndex) => {
+      const selectedItem = items[itemIndex - 1];
+
+      consoleLog(`____________________________________________________________________________________________________________________\n`, 'white', 'bright');
+      consoleLog(`Your money: $${internationalNumberFormat.format(userMoney)}\n`, 'green', 'bright');
+      consoleLog(`${selectedItem.name.toUpperCase()} \n`, 'white', 'bright');
+      consoleLog(`* ${selectedItem.description} * \n`);
+      consoleLog('The unit price is ');
+      consoleLog(`    $${internationalNumberFormat.format(selectedItem.unitPrice)} \n`, 'cyan', 'bright');
+      consoleLog('On stock ');
+      consoleLog(`    ${selectedItem.onStock} pzas. \n`, 'cyan', 'bright');
+
+      const quantity = Number(await userInput('Want some? tell my how many do you want: \n'));
+
+      if (!quantity || quantity === 0) {
+        consoleLog('Don\'t waste my time', 'red', 'bright');
+      } else if (quantity > selectedItem.onStock) {
+        consoleLog('Sorry, I don\'t have enough of this', 'red', 'bright');
+      } else if ((quantity * selectedItem.unitPrice) > userMoney) {
+        consoleLog(`\nNo cash, strange (You need $${internationalNumberFormat.format(quantity * selectedItem.unitPrice)})\n`, 'red', 'bright');
+      } else {
+        consoleLog(`\nYou buy ${quantity} pieces. you are welcome. (Spend: $${internationalNumberFormat.format(quantity * selectedItem.unitPrice)})\n`, 'green', 'bright');
+        consoleLog(`____________________________________________________________________________________________________________________\n`, 'white', 'bright');
+
+        selectedItem.onStock -= quantity;
+        userMoney -= (quantity * selectedItem.unitPrice);
+
+        const some = userItems.some((userItem) => userItem.name === selectedItem.name);
+
+        if (some) {
+          for (let i = 0; i < userItems.length; i++) {
+            if (userItems[i].name === selectedItem.name) {
+              userItems[i].onStock += quantity;
+            }
           }
-        break;
-      case 2:
-        console.log(`
-          Ok I accept this items:
-          1. Dragon tears
-          2. Red potion
-          3. Black oak stick
+        } else {
+          userItems.push({ ...selectedItem, onStock: quantity });
+        }
+      }
+    };
 
-          0. Go back
-        `);
+    const buyItem = async () => {
+      consoleLog(`____________________________________________________________________________________________________________________\n`, 'white', 'bright');
+      consoleLog(`\nYour money: $${internationalNumberFormat.format(userMoney)}\n`, 'green', 'bright');
+      consoleLog('          Ok this is what I have:', 'yellow', 'bright');
+      for (let i = 0; i < items.length; i++) {
+        consoleLog(`             ${i + 1}- ${items[i].name}`, '', 'bright');
+      }
+      consoleLog(`\n\n             0- Go back`, '', 'bright');
+      consoleLog(`Do you wanna something? \n`, 'yellow', 'bright');
 
-        const otherOption = await userInput('Do you wanna sell something? \n');
-          switch (Number(otherOption)) {
-            case 0:
-              break;
-            case 1:
-              const selectedUser = userData.find((a) => a.name === 'Dragon tears');
-              if (!selectedUser) {
-                console.log('You dont have dragon tears');
-                break;
-              }
-              console.log(`I will pay ${selectedUser.unitPrice - (selectedUser.unitPrice * discountPercentage)} for each one.`);
-              console.log('\n');
-              const answerUser = await userInput('How many will you sell to me?');
-                if (Number(answerUser) > selectedUser.onStock) {
-                  console.log("Sorry, you don't have enough of Dragon tears.");
-                } else {
-                  console.log(`you sell to me ${answerUser} pieces. you are welcome.`);
-                  selectedUser.onStock -= Number(answerUser);
-                  money += (Number(answerUser) * selectedUser.unitPrice);
-                    for (let i = 0; i < data.length; i++) {
-                      if (data[i].name === 'Dragon tears') {
-                        data[i].onStock += Number(answerUser);
-                      }
-                    }
-                }
-              break;
-            case 2:
-              const selectedUser2 = userData.find((a) => a.name === 'Red potion');
-              if (!selectedUser2) {
-                console.log('You dont have Red potion');
-                break;
-              }
-              console.log(`I will pay ${selectedUser2.unitPrice - (selectedUser2.unitPrice * discountPercentage)} for each one.`);
-              console.log('\n');
-              const answerUser2 = await userInput('How many will you sell to me?');
-                if (Number(answerUser2) > selectedUser2.onStock) {
-                  console.log("Sorry, you don't have enough of Red potion.");
-                } else {
-                  console.log(`you sell to me ${answerUser2} pieces. you are welcome.`);
-                  selectedUser2.onStock -= Number(answerUser2);
-                  money += (Number(answerUser2) * selectedUser2.unitPrice);
-                    for (let i = 0; i < data.length; i++) {
-                      if (data[i].name === 'Red potion') {
-                        data[i].onStock += Number(answerUser2);
-                      }
-                    }
-                }
-              break;
-            case 3:
-              const selectedUser3 = userData.find((a) => a.name === 'Red potion');
-              if (!selectedUser3) {
-                console.log('You dont have Red potion');
-                break;
-              }
-              console.log(`I will pay ${selectedUser3.unitPrice - (selectedUser3.unitPrice * discountPercentage)} for each one.`);
-              console.log('\n');
-              const answerUser3 = await userInput('How many will you sell to me?');
-                if (Number(answerUser3) > selectedUser3.onStock) {
-                  console.log("Sorry, you don't have enough of Red potion.");
-                } else {
-                  console.log(`you sell to me ${answerUser3} pieces. you are welcome.`);
-                  selectedUser3.onStock -= Number(answerUser3);
-                  money += (Number(answerUser3) * selectedUser3.unitPrice);
-                    for (let i = 0; i < data.length; i++) {
-                      if (data[i].name === 'Red potion') {
-                        data[i].onStock += Number(answerUser3);
-                      }
-                    }
-                }
-              break;
-            default:
-              break;
+      itemToBuy = '';
+      itemToBuy = Number(await userInput(''));
+
+      if (itemToBuy === 0) {
+        return;
+      } else if (itemToBuy && itemToBuy <= items.length && itemToBuy >= 0) {
+        await selectItemToBuy(itemToBuy);
+        await buyItem();
+      } else {
+        consoleLog('I can\`t do this!, select a valid option\n', 'red', 'bright');
+        await buyItem();
+      }
+    };
+
+    const selectItemToSell = async (itemIndex) => {
+      const selectedItem = userItems[itemIndex - 1];
+      consoleLog(`____________________________________________________________________________________________________________________\n`, 'white', 'bright');
+      consoleLog(`I will pay $${internationalNumberFormat.format(selectedItem.unitPrice - (selectedItem.unitPrice * discountBuyPercentage))} for each one.\n`, 'yellow', 'bright');
+      consoleLog(`How many will you sell to me? \n`, 'yellow', 'bright');
+
+      const quantity = Number(await userInput(''));
+
+      if (!quantity || quantity === 0) {
+        consoleLog('Don\'t waste my time', 'red', 'bright');
+      } else if (quantity > selectedItem.onStock) {
+        consoleLog(`Sorry, you don't have enough of ${selectedItem.name}.\n`, 'red', 'bright');
+        consoleLog(`____________________________________________________________________________________________________________________\n`, 'white', 'bright');
+      } else {
+        consoleLog(`You sell to me ${quantity} pieces. you are welcome. (You got $${internationalNumberFormat.format(quantity * (selectedItem.unitPrice - (selectedItem.unitPrice * discountBuyPercentage)))})\n`, 'green', 'bright');
+        consoleLog(`____________________________________________________________________________________________________________________\n`, 'white', 'bright');
+
+        selectedItem.onStock -= quantity;
+        userMoney += (quantity * (selectedItem.unitPrice - (selectedItem.unitPrice * discountBuyPercentage)));
+
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].name === selectedItem.name) {
+            items[i].onStock += quantity;
           }
-        break;
-      case 3:
-        console.log(`Really?! Can\'t you see your own pockets? you have $${money} \n`);
-        console.log('And your items are', JSON.stringify(userData));
-        console.log('\n');
-        break;
-      case 4:
-        console.log('I don\'t have time for that shit, let\'s make business or you can go the hell out of here.');
-        break;
-      default:
-        init();
-        break;
+        }
+
+        for (let i = 0; i < userItems.length; i++) {
+          if (userItems[i].name === selectedItem.name) {
+            userItems[i] = selectedItem;
+          }
+        }
+      }
+    };
+
+    const sellItem = async () => {
+      consoleLog(`____________________________________________________________________________________________________________________\n`, 'white', 'bright');
+
+      if (getInventary()) {
+        consoleLog(`Do you sell something? \n`, 'yellow', 'bright');
+        itemToSell = '';
+        itemToSell = Number(await userInput(''));
+
+        if (itemToSell === 0) {
+          return;
+        } else if (itemToSell && itemToSell <= userItems.length && itemToSell >= 0) {
+          await selectItemToSell(itemToSell);
+          await sellItem();
+        } else {
+          consoleLog('I can\`t do this!, select a valid option\n', 'red', 'bright');
+          await sellItem();
+        }
+      } else {
+        return;
+      }
+    };
+
+    const getUserInformation = () => {
+      consoleLog(`\nYou have: $${internationalNumberFormat.format(userMoney)}\n`, 'green', 'bright');
+      getInventary();
+    };
+
+    const options = {
+      0: () => stayInside = false,
+      1: buyItem,
+      2: sellItem,
+      3: getUserInformation,
+      4: () => consoleLog('I don\'t have time for that shit, let\'s make business or you can go the hell out of here.', 'red', 'bright')
+    }
+
+    if (selectedOption <= 4 && selectedOption >= 0) {
+      await options[selectedOption]();
+    } else {
+      consoleLog('I can\`t do this!, select a valid option\n', 'red', 'bright');
+    }
+
+    if (!stayInside) {
+      consoleLog('Thanks for nothing', 'yellow', 'bright');
+      process.exit();
     }
   }
-
-  console.log('Thanks for nothing');
-  process.exit();
 }
 
 init();

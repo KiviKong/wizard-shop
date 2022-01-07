@@ -2,7 +2,7 @@
   {
     "name": "Dragon tears",
     "description": "Tears taken from the acient dragons of the great montains, those give to you stamina.",
-    "onStock": 10,
+    "onStock": 999,
     "unitPrice": 102
   },
   {
@@ -16,5 +16,11 @@
     "description": "This stick has a pure dark color, light is complety absorbed by those. Breake in two to make instant fire",
     "onStock": 32,
     "unitPrice": 66
+  },
+  {
+    "name": "Stick of truth",
+    "description": "This rod makes whoever has it inside tell the truth",
+    "onStock": 10,
+    "unitPrice": 500.5
   }
 ]
