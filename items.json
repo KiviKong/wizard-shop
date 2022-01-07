@@ -1,20 +1,23 @@
 [
   {
-    "name": "Dragon tears",
-    "description": "Tears taken from the acient dragons of the great montains, those give to you stamina.",
-    "onStock": 10,
-    "unitPrice": 102
+    "id": "e5517485809be057e228",
+    "name": "Dragon Tears",
+    "description": "Tears taken from the acient dragons of the great mountains, those give to you stamina.",
+    "stock": 10,
+    "price": 102
   },
   {
-    "name": "Red potion",
+    "id": "51f541f8bb9282da4062",
+    "name": "Red Potion",
     "description": "A simple red potion, the ingredients are common quest rewards, those give you health points.",
-    "onStock": 54,
-    "unitPrice": 28
+    "stock": 54,
+    "price": 28
   },
   {
-    "name": "Black oak stick",
+    "id": "ebb073aff9cb1175f1eb",
+    "name": "Black Oak Stick",
     "description": "This stick has a pure dark color, light is complety absorbed by those. Breake in two to make instant fire",
-    "onStock": 32,
-    "unitPrice": 66
+    "stock": 32,
+    "price": 66
   }
 ]
