@@ -22,17 +22,15 @@ function userInput(question) {
   });
 }
 
-const getInventary = (label) => {
+const getInventary = () => {
   if (userItems.length === 0) {
     consoleLog('Your inventory is empty!', 'red', 'bright');
-    return false;
   } else {
     consoleLog('         Your inventory:', 'yellow', 'bright');
     for (let i = 0; i < userItems.length; i++) {
       consoleLog(`             ${i + 1}- ${userItems[i].name}: ${userItems[i].onStock} pzas.`, '', 'bright');
     }
     consoleLog(`\n\n             0- Go back`, '', 'bright');
-    return true;
   }
 };
 
@@ -53,7 +51,7 @@ async function init() {
     let itemToBuy;
     let itemToSell;
 
-    consoleLog(`____________________________________________________________________________________________________________________\n`, 'white', 'bright');
+    console.clear();
     consoleLog('Welcome to my store, How can I help you?', 'yellow', 'bright');
 
     selectedOption = Number(await userInput(getMainMenu()));
@@ -61,7 +59,7 @@ async function init() {
     const selectItemToBuy = async (itemIndex) => {
       const selectedItem = items[itemIndex - 1];
 
-      consoleLog(`____________________________________________________________________________________________________________________\n`, 'white', 'bright');
+      console.clear();
       consoleLog(`Your money: $${internationalNumberFormat.format(userMoney)}\n`, 'green', 'bright');
       consoleLog(`${selectedItem.name.toUpperCase()} \n`, 'white', 'bright');
       consoleLog(`* ${selectedItem.description} * \n`);
@@ -100,7 +98,6 @@ async function init() {
     };
 
     const buyItem = async () => {
-      consoleLog(`____________________________________________________________________________________________________________________\n`, 'white', 'bright');
       consoleLog(`\nYour money: $${internationalNumberFormat.format(userMoney)}\n`, 'green', 'bright');
       consoleLog('          Ok this is what I have:', 'yellow', 'bright');
       for (let i = 0; i < items.length; i++) {
@@ -115,6 +112,7 @@ async function init() {
       if (itemToBuy === 0) {
         return;
       } else if (itemToBuy && itemToBuy <= items.length && itemToBuy >= 0) {
+        console.clear();
         await selectItemToBuy(itemToBuy);
         await buyItem();
       } else {
@@ -125,7 +123,8 @@ async function init() {
 
     const selectItemToSell = async (itemIndex) => {
       const selectedItem = userItems[itemIndex - 1];
-      consoleLog(`____________________________________________________________________________________________________________________\n`, 'white', 'bright');
+
+      console.clear();
       consoleLog(`I will pay $${internationalNumberFormat.format(selectedItem.unitPrice - (selectedItem.unitPrice * discountBuyPercentage))} for each one.\n`, 'yellow', 'bright');
       consoleLog(`How many will you sell to me? \n`, 'yellow', 'bright');
 
@@ -158,9 +157,8 @@ async function init() {
     };
 
     const sellItem = async () => {
-      consoleLog(`____________________________________________________________________________________________________________________\n`, 'white', 'bright');
 
-      if (getInventary()) {
+      if (userItems.length === 0) {
         consoleLog(`Do you sell something? \n`, 'yellow', 'bright');
         itemToSell = '';
         itemToSell = Number(await userInput(''));
@@ -168,6 +166,7 @@ async function init() {
         if (itemToSell === 0) {
           return;
         } else if (itemToSell && itemToSell <= userItems.length && itemToSell >= 0) {
+          console.clear();
           await selectItemToSell(itemToSell);
           await sellItem();
         } else {
@@ -180,6 +179,7 @@ async function init() {
     };
 
     const getUserInformation = () => {
+      console.clear();
       consoleLog(`\nYou have: $${internationalNumberFormat.format(userMoney)}\n`, 'green', 'bright');
       getInventary();
     };
